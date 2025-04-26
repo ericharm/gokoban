@@ -3,6 +3,7 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type Entity struct {
+	BaseNode
 	X      int32
 	Y      int32
 	Radius float32
@@ -34,11 +35,4 @@ func (e *Entity) Rotate(angle float32) {
 func (e *Entity) Move(dx, dy int32) {
 	e.X += dx
 	e.Y += dy
-}
-
-func (e *Entity) Update() {
-}
-
-func (e *Entity) AddChild(node SceneNode) {
-	// No-op for Entity
 }

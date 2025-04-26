@@ -9,13 +9,13 @@ func main() {
 	entity := NewEntity(400, 300, 20, rl.Red)
 
 	app := GetApplication()
-	app.RootNode.AddChild(entity)
+	app.BaseNode.AddChild(entity)
 
 	for !rl.WindowShouldClose() {
 
-		app.RootNode.Update()
+		app.BaseNode.Update()
 
-		app.RootNode.Draw()
+		app.BaseNode.Draw()
 
 		ProcessInputEvents()
 		ProcessRealTimeInput()
