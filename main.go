@@ -1,37 +1,45 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"github.com/ericharm/sogoban/defs"
+	"github.com/ericharm/sogoban/domain"
+	"github.com/rthornton128/goncurses"
+	"log"
+)
 
 func main() {
-	rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE)
-	rl.SetTargetFPS(TARGET_FPS)
 
-	entity := NewEntity(400, 300, 20, rl.Red)
-
-	app := GetApplication()
-	app.BaseNode.AddChild(entity)
-
-	for !rl.WindowShouldClose() {
-
-		app.BaseNode.Update()
-
-		app.BaseNode.Draw()
-
-		ProcessInputEvents()
-		ProcessRealTimeInput()
-
-		event := DequeueInputEvent()
-		for event != -1 {
-			if event == LeftHeld {
-				entity.Move(-5, 0)
-			} else if event == RightHeld {
-				entity.Move(5, 0)
-			}
-			event = DequeueInputEvent()
-		}
-
+	stdscr, err := goncurses.Init()
+	if err != nil {
+		log.Fatal("init", err)
 	}
+	defer goncurses.End()
 
-	rl.CloseWindow()
+	goncurses.Raw(true)   // turn on raw "uncooked" input
+	goncurses.Echo(false) // turn echoing of typed characters off
+	goncurses.Cursor(0)   // hide cursor
+	stdscr.Keypad(true)   // allow keypad input
+	domain.StartColor()
 
+	game := domain.BuildLevel("data/1.lvl")
+
+	for {
+		stdscr.Clear()
+		game.Print(stdscr)
+		stdscr.Refresh()
+
+		char := stdscr.GetChar()
+		switch char {
+		case 'q':
+			return
+		case goncurses.KEY_UP:
+			game.Player.PushInDirection(defs.Up, game.Entities)
+		case goncurses.KEY_DOWN:
+			game.Player.PushInDirection(defs.Down, game.Entities)
+		case goncurses.KEY_LEFT:
+			game.Player.PushInDirection(defs.Left, game.Entities)
+		case goncurses.KEY_RIGHT:
+			game.Player.PushInDirection(defs.Right, game.Entities)
+		}
+	}
 }
