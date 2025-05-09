@@ -59,7 +59,7 @@ func BuildLevel(filePath string) *models.Game {
 		}
 
 		if entity != nil {
-			entities[[2]int{x, y}] = entity
+			entities[defs.Point{x, y}] = entity
 		}
 
 		x += 1

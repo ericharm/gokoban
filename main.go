@@ -22,6 +22,7 @@ func main() {
 	domain.StartColor()
 
 	game := domain.BuildLevel("data/1.lvl")
+	defer game.Close()
 
 	for {
 		stdscr.Clear()
@@ -41,5 +42,7 @@ func main() {
 		case goncurses.KEY_RIGHT:
 			game.Player.PushInDirection(defs.Right, game.Entities)
 		}
+
+		game.Log()
 	}
 }

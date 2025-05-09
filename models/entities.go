@@ -1,67 +1,6 @@
 package models
 
-import "github.com/rthornton128/goncurses"
 import "github.com/ericharm/sogoban/defs"
-
-type Entity interface {
-	GetType() defs.EntityType
-	Print(*goncurses.Window)
-	Move(int, int, map[defs.Point]Entity)
-	PushInDirection(defs.Direction, map[defs.Point]Entity) bool
-}
-
-type BaseEntity struct {
-	entityType defs.EntityType
-	x          int
-	y          int
-	char       goncurses.Char
-	color      int16
-}
-
-func (entity *BaseEntity) GetType() defs.EntityType {
-	return entity.entityType
-}
-
-func (entity *BaseEntity) Print(stdscr *goncurses.Window) {
-	stdscr.MoveAddChar(
-		entity.y,
-		entity.x,
-		entity.char|goncurses.ColorPair(entity.color),
-	)
-}
-
-func (entity *BaseEntity) Move(x, y int, entities map[defs.Point]Entity) {
-	// remove the entity from its old position
-	delete(entities, [2]int{entity.x, entity.y})
-
-	entity.x += x
-	entity.y += y
-
-	// add the entity to its new position
-	entities[[2]int{entity.x, entity.y}] = entity
-}
-
-func (entity *BaseEntity) PushInDirection(direction defs.Direction, entities map[defs.Point]Entity) bool {
-	target := [2]int{entity.x + direction[0], entity.y + direction[1]}
-	_, exists := entities[target]
-
-	if exists {
-		return false
-	}
-
-	entity.Move(direction[0], direction[1], entities)
-	return true
-}
-
-func NewEntity(entityType defs.EntityType, x int, y int) *BaseEntity {
-	entity := &BaseEntity{
-		entityType: entityType,
-		x:          x,
-		y:          y,
-	}
-
-	return entity
-}
 
 type Player struct {
 	BaseEntity
@@ -77,6 +16,26 @@ func NewPlayer(x int, y int) *Player {
 			color:      defs.Magenta,
 		},
 	}
+}
+
+func (player *Player) PushInDirection(direction defs.Direction, entities map[defs.Point]Entity) bool {
+	target := defs.Point{player.x + direction[0], player.y + direction[1]}
+	other, exists := entities[target]
+
+	if exists {
+		ok := other.PushInDirection(direction, entities)
+		if !ok {
+			return false
+		}
+	}
+
+	player.Move(direction[0], direction[1], entities)
+	return true
+}
+
+func (player *Player) Move(x, y int, entities map[defs.Point]Entity) {
+	player.x += x
+	player.y += y
 }
 
 type Wall struct {
@@ -109,6 +68,26 @@ func NewBoulder(x int, y int) Entity {
 			color:      defs.Cyan,
 		},
 	}
+}
+
+func (boulder *Boulder) PushInDirection(direction defs.Direction, entities map[defs.Point]Entity) bool {
+	target := defs.Point{boulder.x + direction[0], boulder.y + direction[1]}
+	other, exists := entities[target]
+
+	if exists {
+		if other.GetType() == defs.EntityPit {
+			delete(entities, target)
+			delete(entities, defs.Point{boulder.x, boulder.y})
+			return true
+		}
+		return false
+	}
+	boulder.Move(direction[0], direction[1], entities)
+	return true
+}
+
+func (entity *Boulder) Move(x, y int, entities map[defs.Point]Entity) {
+	moveEntity(entity, x, y, entities)
 }
 
 type Pit struct {
