@@ -1,25 +1,24 @@
 package domain
 
 import (
-	"github.com/ericharm/sogoban/defs"
+	en "github.com/ericharm/sogoban/entities"
 	"github.com/ericharm/sogoban/models"
 	iofs "io/fs"
 	"log"
 	"os"
 )
 
-func NewEntityFromChar(ch string, x, y int) (models.Entity, *models.Player) {
-
+func NewEntityFromChar(ch string, x, y int) (en.Entity, *en.Player) {
 	if ch == "@" {
-		player := models.NewPlayer(x, y)
+		player := en.NewPlayer(x, y)
 		return nil, player
 	}
 
-	var charToEntityCreateFuncMap = map[string]func(int, int) models.Entity{
-		"#": models.NewWall,
-		"0": models.NewBoulder,
-		"^": models.NewPit,
-		"X": models.NewExit,
+	var charToEntityCreateFuncMap = map[string]func(int, int) en.Entity{
+		"#": en.NewWall,
+		"0": en.NewBoulder,
+		"^": en.NewPit,
+		"X": en.NewExit,
 	}
 
 	creationFunc, ok := charToEntityCreateFuncMap[ch]
@@ -38,8 +37,8 @@ func BuildLevel(filePath string) *models.Game {
 		log.Fatal("init", err)
 	}
 
-	player := models.NewPlayer(0, 0)
-	entities := make(map[defs.Point]models.Entity)
+	player := en.NewPlayer(0, 0)
+	entities := make(map[en.Point]en.Entity)
 
 	x := 0
 	y := 0
@@ -59,7 +58,7 @@ func BuildLevel(filePath string) *models.Game {
 		}
 
 		if entity != nil {
-			entities[defs.Point{x, y}] = entity
+			entities[en.Point{x, y}] = entity
 		}
 
 		x += 1

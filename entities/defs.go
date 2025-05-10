@@ -1,4 +1,4 @@
-package defs
+package entities
 
 type Point [2]int
 

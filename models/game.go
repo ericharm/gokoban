@@ -3,22 +3,48 @@ package models
 import "strconv"
 import "github.com/rthornton128/goncurses"
 import "github.com/ericharm/sogoban/defs"
+import "github.com/ericharm/sogoban/entities"
 
 type Game struct {
-	Player   *Player
-	Entities map[defs.Point]Entity
+	Player   *entities.Player
+	Entities map[entities.Point]entities.Entity
+	Running  bool
 	turn     int
 }
 
-func NewGame(player *Player, entities map[defs.Point]Entity) *Game {
+func NewGame(player *entities.Player, entities map[entities.Point]entities.Entity) *Game {
 	return &Game{
 		Player:   player,
 		Entities: entities,
+		Running:  true,
 		turn:     0,
 	}
 }
 
-func (game *Game) Print(stdscr *goncurses.Window) {
+func (game *Game) Tick(window *goncurses.Window) {
+	game.turn += 1
+	window.Clear()
+	game.print(window)
+	window.Refresh()
+
+	char := window.GetChar()
+	switch char {
+	case 'q':
+		game.Running = false
+	case goncurses.KEY_UP:
+		game.Player.PushInDirection(defs.Up, game.Entities)
+	case goncurses.KEY_DOWN:
+		game.Player.PushInDirection(defs.Down, game.Entities)
+	case goncurses.KEY_LEFT:
+		game.Player.PushInDirection(defs.Left, game.Entities)
+	case goncurses.KEY_RIGHT:
+		game.Player.PushInDirection(defs.Right, game.Entities)
+	}
+
+	game.Log()
+}
+
+func (game *Game) print(window *goncurses.Window) {
 	for pt, entity := range game.Entities {
 		x, y := entity.GetPos()
 		if pt[0] != x {
@@ -27,40 +53,21 @@ func (game *Game) Print(stdscr *goncurses.Window) {
 		if pt[1] != y {
 
 		}
-		entity.Print(stdscr)
+		entity.Print(window)
 	}
 
-	game.Player.Print(stdscr)
-	game.turn += 1
+	game.Player.Print(window)
 }
 
 func (game *Game) Log() {
-	Log("Turn: " + strconv.Itoa(game.turn) + "\n")
+	WriteToLog("Turn: " + strconv.Itoa(game.turn) + "\n")
+	WriteToLog(game.Player.Debug())
+	WriteToLog(" ")
 
-	x, y := game.Player.GetPos()
-	Log("Player: (")
-	Log(strconv.Itoa(x))
-	Log(", ")
-	Log(strconv.Itoa(y))
-	Log(")\n")
-
-	for pt, entity := range game.Entities {
-		x, y := entity.GetPos()
-		Log(entity.GetChar())
-		Log(" (")
-		Log(strconv.Itoa(pt[0]))
-		Log(", ")
-		Log(strconv.Itoa(pt[1]))
-		Log(") (")
-		Log(strconv.Itoa(x))
-		Log(", ")
-		Log(strconv.Itoa(y))
-		Log(")\n")
+	for _, entity := range game.Entities {
+		WriteToLog(entity.Debug())
+		WriteToLog(" ")
 	}
 
-	Log("\n")
-}
-
-func (game *Game) Close() {
-	Close()
+	WriteToLog("\n")
 }
