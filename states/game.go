@@ -1,9 +1,10 @@
-package models
+package states
 
 import "strconv"
 import "github.com/rthornton128/goncurses"
-import "github.com/ericharm/sogoban/defs"
-import "github.com/ericharm/sogoban/entities"
+import "github.com/ericharm/gokoban/defs"
+import "github.com/ericharm/gokoban/util"
+import "github.com/ericharm/gokoban/entities"
 
 type Game struct {
 	Player   *entities.Player
@@ -60,14 +61,14 @@ func (game *Game) print(window *goncurses.Window) {
 }
 
 func (game *Game) Log() {
-	WriteToLog("Turn: " + strconv.Itoa(game.turn) + "\n")
-	WriteToLog(game.Player.Debug())
-	WriteToLog(" ")
+	util.WriteToLog("Turn: " + strconv.Itoa(game.turn) + "\n")
+	util.WriteToLog(game.Player.Debug())
+	util.WriteToLog(" ")
 
 	for _, entity := range game.Entities {
-		WriteToLog(entity.Debug())
-		WriteToLog(" ")
+		util.WriteToLog(entity.Debug())
+		util.WriteToLog(" ")
 	}
 
-	WriteToLog("\n")
+	util.WriteToLog("\n")
 }

@@ -1,11 +1,19 @@
-package domain
+package util
 
 import (
-	"github.com/ericharm/sogoban/defs"
+	"github.com/ericharm/gokoban/defs"
 	"github.com/rthornton128/goncurses"
 )
 
-func StartColor() {
+func InitCurses(window *goncurses.Window) {
+	goncurses.Raw(true)   // turn on raw "uncooked" input
+	goncurses.Echo(false) // turn echoing of typed characters off
+	goncurses.Cursor(0)   // hide cursor
+	window.Keypad(true)   // allow keypad input
+	startColor()
+}
+
+func startColor() {
 	goncurses.StartColor()
 	goncurses.InitPair(defs.White, goncurses.C_WHITE, goncurses.C_BLACK)
 	goncurses.InitPair(defs.Red, goncurses.C_RED, goncurses.C_BLACK)

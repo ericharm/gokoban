@@ -3,7 +3,7 @@ package entities
 import "strconv"
 import "strings"
 import "github.com/rthornton128/goncurses"
-import "github.com/ericharm/sogoban/defs"
+import "github.com/ericharm/gokoban/defs"
 
 type Entity interface {
 	Print(*goncurses.Window)

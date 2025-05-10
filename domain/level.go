@@ -1,8 +1,8 @@
 package domain
 
 import (
-	en "github.com/ericharm/sogoban/entities"
-	"github.com/ericharm/sogoban/models"
+	en "github.com/ericharm/gokoban/entities"
+	"github.com/ericharm/gokoban/states"
 	iofs "io/fs"
 	"log"
 	"os"
@@ -30,7 +30,7 @@ func NewEntityFromChar(ch string, x, y int) (en.Entity, *en.Player) {
 	return creationFunc(x, y), nil
 }
 
-func BuildLevel(filePath string) *models.Game {
+func BuildLevel(filePath string) *states.Game {
 	data, err := iofs.ReadFile(os.DirFS("."), filePath)
 
 	if err != nil {
@@ -64,5 +64,5 @@ func BuildLevel(filePath string) *models.Game {
 		x += 1
 	}
 
-	return models.NewGame(player, entities)
+	return states.NewGame(player, entities)
 }

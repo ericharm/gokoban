@@ -1,4 +1,4 @@
-module github.com/ericharm/sogoban
+module github.com/ericharm/gokoban
 
 go 1.24.2
 

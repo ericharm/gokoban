@@ -1,6 +1,6 @@
 package entities
 
-import "github.com/ericharm/sogoban/defs"
+import "github.com/ericharm/gokoban/defs"
 
 type Player struct {
 	BaseEntity
