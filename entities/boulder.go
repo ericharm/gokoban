@@ -18,7 +18,7 @@ func NewBoulder(x int, y int) Entity {
 	}
 }
 
-func (boulder *Boulder) PushInDirection(direction defs.Direction, entities map[Point]Entity) bool {
+func (boulder *Boulder) PushInDirection(direction Direction, entities map[Point]Entity) bool {
 	target := Point{boulder.x + direction[0], boulder.y + direction[1]}
 	other, exists := entities[target]
 

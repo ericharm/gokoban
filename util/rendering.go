@@ -23,3 +23,10 @@ func startColor() {
 	goncurses.InitPair(defs.Magenta, goncurses.C_MAGENTA, goncurses.C_BLACK)
 	goncurses.InitPair(defs.Cyan, goncurses.C_CYAN, goncurses.C_BLACK)
 }
+
+func GetOffset(window *goncurses.Window, width, height int) (int, int) {
+	maxX, maxY := window.MaxYX()
+	offsetX := (maxX - width) / 2
+	offsetY := (maxY - height) / 2
+	return offsetX, offsetY
+}

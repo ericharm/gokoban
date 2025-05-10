@@ -18,7 +18,7 @@ func NewPlayer(x int, y int) *Player {
 	}
 }
 
-func (player *Player) PushInDirection(direction defs.Direction, entities map[Point]Entity) bool {
+func (player *Player) PushInDirection(direction Direction, entities map[Point]Entity) bool {
 	target := Point{player.x + direction[0], player.y + direction[1]}
 	other, exists := entities[target]
 

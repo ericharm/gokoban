@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ericharm/gokoban/domain"
+	"github.com/ericharm/gokoban/states"
 	"github.com/ericharm/gokoban/util"
 	"github.com/rthornton128/goncurses"
 	"log"
@@ -18,7 +18,7 @@ func main() {
 
 	util.InitCurses(stdscr)
 
-	game := domain.BuildLevel("data/2.lvl")
+	game := states.NewGameFromFile("data/2.lvl")
 	defer util.CloseLogFile()
 
 	for game.Running == true {
