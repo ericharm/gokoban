@@ -8,20 +8,17 @@ import (
 )
 
 func main() {
-	stdscr, err := goncurses.Init()
+	window, err := goncurses.Init()
 
 	if err != nil {
 		log.Fatal("init", err)
 	}
 
 	defer goncurses.End()
-
-	util.InitCurses(stdscr)
-
-	game := states.NewGameFromFile("data/2.lvl")
 	defer util.CloseLogFile()
 
-	for game.Running == true {
-		game.Tick(stdscr)
-	}
+	util.InitCurses(window)
+	application := states.GetApplication()
+	application.PushState(states.NewStageSelect(window))
+	application.Run(window)
 }

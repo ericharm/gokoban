@@ -20,10 +20,10 @@ type BaseEntity struct {
 	color      int16
 }
 
-func (entity *BaseEntity) Print(stdscr *goncurses.Window, offset Point) {
-	stdscr.MoveAddChar(
-		entity.y+offset[0],
-		entity.x+offset[1],
+func (entity *BaseEntity) Print(window *goncurses.Window, offset Point) {
+	window.MoveAddChar(
+		entity.y+offset[1],
+		entity.x+offset[0],
 		entity.char|goncurses.ColorPair(entity.color),
 	)
 }

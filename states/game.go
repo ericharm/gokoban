@@ -8,34 +8,27 @@ import (
 )
 
 type Game struct {
-	Running bool
-	level   *models.Level
-	turn    int
+	level *models.Level
+	turn  int
 }
 
 func NewGameFromFile(filename string) *Game {
+	goncurses.Cursor(0)
 	level := models.NewLevelFromFile(filename)
 	return &Game{
-		Running: true,
-		level:   level,
-		turn:    0,
+		level: level,
+		turn:  0,
 	}
 }
 
-func (game *Game) Tick(window *goncurses.Window) {
-	game.turn += 1
-	window.Clear()
-	game.level.Print(window)
-	window.Refresh()
-
-	char := window.GetChar()
-	if char == 'q' {
-		game.Running = false
-	} else {
-		game.level.HandleInput(char)
-	}
-
+func (game *Game) Draw(window *goncurses.Window) {
+	game.level.Draw(window)
 	game.Log()
+}
+
+func (game *Game) HandleInput(char goncurses.Key) {
+	game.level.HandleInput(char)
+	game.turn += 1
 }
 
 func (game *Game) Log() {

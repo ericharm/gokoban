@@ -1,4 +1,4 @@
-package domain
+package states
 
 import (
 	en "github.com/ericharm/gokoban/entities"
@@ -29,18 +29,11 @@ func (level *Level) HandleInput(char goncurses.Key) {
 	}
 }
 
-func (level *Level) Print(window *goncurses.Window) {
+func (level *Level) Draw(window *goncurses.Window) {
 	offsetX, offsetY := util.GetOffset(window, level.width, level.height)
 	offset := en.Point{offsetX, offsetY}
 
-	for pt, entity := range level.entities {
-		x, y := entity.GetPos()
-		if pt[0] != x {
-			return
-		}
-		if pt[1] != y {
-
-		}
+	for _, entity := range level.entities {
 		entity.Print(window, offset)
 	}
 

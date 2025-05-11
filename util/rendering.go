@@ -6,10 +6,10 @@ import (
 )
 
 func InitCurses(window *goncurses.Window) {
-	goncurses.Raw(true)   // turn on raw "uncooked" input
-	goncurses.Echo(false) // turn echoing of typed characters off
-	goncurses.Cursor(0)   // hide cursor
-	window.Keypad(true)   // allow keypad input
+	goncurses.Raw(true)
+	goncurses.Echo(false)
+	goncurses.Cursor(0)
+	window.Keypad(true)
 	startColor()
 }
 
@@ -25,7 +25,7 @@ func startColor() {
 }
 
 func GetOffset(window *goncurses.Window, width, height int) (int, int) {
-	maxX, maxY := window.MaxYX()
+	maxY, maxX := window.MaxYX()
 	offsetX := (maxX - width) / 2
 	offsetY := (maxY - height) / 2
 	return offsetX, offsetY
