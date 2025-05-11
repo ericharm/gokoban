@@ -1,7 +1,6 @@
 package states
 
 import (
-	"github.com/ericharm/gokoban/util"
 	"github.com/rthornton128/goncurses"
 )
 
@@ -35,20 +34,18 @@ type OptionsList struct {
 func NewOptionsList(
 	options []*Option,
 	columnOffsets []int,
-	window *goncurses.Window,
-	baseYOffset int,
+	startX int,
+	startY int,
 ) *OptionsList {
-	centerX, centerY := util.GetOffset(window, 20, 10)
-
 	columnIndex := 0
-	xOffset := columnOffsets[columnIndex] + centerX
-	yOffset := baseYOffset + centerY
+	xOffset := columnOffsets[columnIndex] + startX
+	yOffset := startY
 
 	for _, option := range options {
 		option.SetPos(xOffset, yOffset)
 
 		columnIndex = (columnIndex + 1) % len(columnOffsets)
-		xOffset = columnOffsets[columnIndex] + centerX
+		xOffset = columnOffsets[columnIndex] + startX
 		if columnIndex == 0 {
 			yOffset += YSpacing
 		}

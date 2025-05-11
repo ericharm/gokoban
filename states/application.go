@@ -9,6 +9,7 @@ import (
 type Application struct {
 	states  []State
 	running bool
+	window  *goncurses.Window
 }
 
 var appInstance *Application
@@ -23,6 +24,14 @@ func GetApplication() *Application {
 	})
 
 	return appInstance
+}
+
+func (app *Application) SetWindow(window *goncurses.Window) {
+	app.window = window
+}
+
+func (app *Application) GetWindow() *goncurses.Window {
+	return app.window
 }
 
 func (app *Application) Run(window *goncurses.Window) {

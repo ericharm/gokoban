@@ -29,6 +29,11 @@ func (game *Game) Draw(window *goncurses.Window) {
 func (game *Game) HandleInput(char goncurses.Key) {
 	game.level.HandleInput(char)
 	game.turn += 1
+
+	if game.level.Completed {
+		app := GetApplication()
+		app.SwapState(NewStageSelect())
+	}
 }
 
 func (game *Game) Log() {

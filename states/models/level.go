@@ -10,10 +10,11 @@ import (
 )
 
 type Level struct {
-	player   *en.Player
-	entities map[en.Point]en.Entity
-	width    int
-	height   int
+	Completed bool
+	player    *en.Player
+	entities  map[en.Point]en.Entity
+	width     int
+	height    int
 }
 
 func (level *Level) HandleInput(char goncurses.Key) {
@@ -27,10 +28,15 @@ func (level *Level) HandleInput(char goncurses.Key) {
 	case goncurses.KEY_RIGHT:
 		level.player.PushInDirection(en.Right, level.entities)
 	}
+
+	if level.player.OnExit {
+		level.Completed = true
+	}
 }
 
 func (level *Level) Draw(window *goncurses.Window) {
-	offsetX, offsetY := util.GetOffset(window, level.width, level.height)
+	maxY, maxX := window.MaxYX()
+	offsetX, offsetY := util.GetOffset(maxX, maxY, level.width, level.height)
 	offset := en.Point{offsetX, offsetY}
 
 	for _, entity := range level.entities {
@@ -77,6 +83,7 @@ func NewLevelFromFile(filePath string) *Level {
 
 		if p != nil {
 			player = p
+			entities[en.Point{x, y}] = p
 		}
 
 		if entity != nil {
@@ -86,7 +93,7 @@ func NewLevelFromFile(filePath string) *Level {
 		x += 1
 	}
 
-	return &Level{player, entities, width, y}
+	return &Level{Completed: false, player: player, entities: entities, width: width, height: y}
 }
 
 func newEntityFromChar(ch string, x, y int) (en.Entity, *en.Player) {

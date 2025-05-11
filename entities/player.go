@@ -4,6 +4,7 @@ import "github.com/ericharm/gokoban/defs"
 
 type Player struct {
 	BaseEntity
+	OnExit bool
 }
 
 func NewPlayer(x int, y int) *Player {
@@ -15,6 +16,7 @@ func NewPlayer(x int, y int) *Player {
 			char:       '@',
 			color:      defs.Magenta,
 		},
+		OnExit: false,
 	}
 }
 
@@ -29,11 +31,17 @@ func (player *Player) PushInDirection(direction Direction, entities map[Point]En
 		}
 	}
 
+	delete(entities, Point{player.x, player.y})
 	player.move(direction[0], direction[1])
+	entities[Point{player.x, player.y}] = player
 	return true
 }
 
 func (player *Player) move(x, y int) {
 	player.x += x
 	player.y += y
+}
+
+func (player *Player) SetOnExit(onExit bool) {
+	player.OnExit = onExit
 }

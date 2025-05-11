@@ -19,6 +19,7 @@ func main() {
 
 	util.InitCurses(window)
 	application := states.GetApplication()
-	application.PushState(states.NewStageSelect(window))
+	application.SetWindow(window)
+	application.PushState(states.NewStageSelect())
 	application.Run(window)
 }
