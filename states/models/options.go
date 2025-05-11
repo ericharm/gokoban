@@ -20,9 +20,9 @@ func NewOption(text string, action func()) *Option {
 	}
 }
 
-func (o *Option) SetPos(x, y int) {
-	o.x = x
-	o.y = y
+func (option *Option) SetPos(x, y int) {
+	option.x = x
+	option.y = y
 }
 
 type OptionsList struct {
@@ -31,21 +31,16 @@ type OptionsList struct {
 	selectedOptionIndex int
 }
 
-func NewOptionsList(
-	options []*Option,
-	columnOffsets []int,
-	startX int,
-	startY int,
-) *OptionsList {
+func NewOptionsList(options []*Option, columnOffsets []int, x int, y int) *OptionsList {
 	columnIndex := 0
-	xOffset := columnOffsets[columnIndex] + startX
-	yOffset := startY
+	xOffset := columnOffsets[columnIndex] + x
+	yOffset := y
 
 	for _, option := range options {
 		option.SetPos(xOffset, yOffset)
 
 		columnIndex = (columnIndex + 1) % len(columnOffsets)
-		xOffset = columnOffsets[columnIndex] + startX
+		xOffset = columnOffsets[columnIndex] + x
 		if columnIndex == 0 {
 			yOffset += SelectLevelScreenYSpacing
 		}
@@ -58,42 +53,38 @@ func NewOptionsList(
 	}
 }
 
-func (o *OptionsList) HandleInput(key goncurses.Key) {
-	verticalDistance := len(o.columnOffsets)
+func (list *OptionsList) HandleInput(key goncurses.Key) {
+	verticalDistance := len(list.columnOffsets)
 	switch key {
 	case goncurses.KEY_UP:
-		o.selectedOptionIndex -= verticalDistance
+		list.selectedOptionIndex -= verticalDistance
 	case goncurses.KEY_DOWN:
-		o.selectedOptionIndex += verticalDistance
+		list.selectedOptionIndex += verticalDistance
 	case goncurses.KEY_LEFT:
-		o.selectedOptionIndex -= 1
+		list.selectedOptionIndex -= 1
 	case goncurses.KEY_RIGHT:
-		o.selectedOptionIndex += 1
+		list.selectedOptionIndex += 1
 	}
 
-	maxOptionIndex := len(o.options) - 1
-	if o.selectedOptionIndex < 0 {
-		o.selectedOptionIndex = maxOptionIndex
+	maxOptionIndex := len(list.options) - 1
+	if list.selectedOptionIndex < 0 {
+		list.selectedOptionIndex = maxOptionIndex
 	}
-	if o.selectedOptionIndex > maxOptionIndex {
-		o.selectedOptionIndex = 0
+	if list.selectedOptionIndex > maxOptionIndex {
+		list.selectedOptionIndex = 0
 	}
 
 	if key == goncurses.KEY_ENTER || key == goncurses.KEY_RETURN {
-		selectedOption := o.options[o.selectedOptionIndex]
+		selectedOption := list.options[list.selectedOptionIndex]
 		selectedOption.action()
 	}
 }
 
-func (o *OptionsList) Draw(window *goncurses.Window) {
-	for _, option := range o.options {
+func (list *OptionsList) Draw(window *goncurses.Window) {
+	for _, option := range list.options {
 		window.MovePrint(option.y, option.x, option.text)
 	}
 
-	o.drawCursor(window)
-}
-
-func (o *OptionsList) drawCursor(window *goncurses.Window) {
-	selectedOption := o.options[o.selectedOptionIndex]
+	selectedOption := list.options[list.selectedOptionIndex]
 	window.Move(selectedOption.y, selectedOption.x-SelectedOptionCursorGutter)
 }

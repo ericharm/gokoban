@@ -10,14 +10,6 @@ const Cyan = 6
 
 type Vec2 [2]int
 
-func (v Vec2) X() int {
-	return v[0]
-}
-
-func (v Vec2) Y() int {
-	return v[1]
-}
-
 func (v Vec2) AsTuple() (int, int) {
 	return v[0], v[1]
 }

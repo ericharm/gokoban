@@ -13,20 +13,21 @@ type StageSelect struct {
 func NewStageSelect() *StageSelect {
 	goncurses.Cursor(1)
 
-	application := GetApplication()
-	window := application.GetWindow()
+	singleColumnWidth := len(" Level 8 ") + models.SelectedOptionCursorGutter
+	optionsListWidth := singleColumnWidth * models.SelectLevelScreenColumnCount
+	optionsListHeight := len(stageSelectOptions) /
+		models.SelectLevelScreenColumnCount *
+		models.SelectLevelScreenYSpacing
+
+	window := GetApplication().GetWindow()
 	maxY, maxX := window.MaxYX()
-
-	singleColumnWidth := len("Level 8") + models.SelectedOptionCursorGutter*2
-	columnCount := models.SelectLevelScreenColumnCount
-	optionsListWidth := singleColumnWidth * columnCount
-	optionsListHeight := len(stageSelectOptions) / columnCount * models.SelectLevelScreenYSpacing
-
 	centerX, centerY := util.GetOffset(maxX, maxY, optionsListWidth, optionsListHeight)
+
+	columnOffsets := []int{0, singleColumnWidth}
 
 	return &StageSelect{
 		options: models.NewOptionsList(
-			stageSelectOptions, []int{0, singleColumnWidth}, centerX, centerY,
+			stageSelectOptions, columnOffsets, centerX, centerY,
 		),
 	}
 }
@@ -51,6 +52,5 @@ var stageSelectOptions = []*models.Option{
 }
 
 func selectLevel(fileName string) {
-	application := GetApplication()
-	application.SwapState(NewGameFromFile(fileName))
+	GetApplication().SwapState(NewGameFromFile(fileName))
 }
