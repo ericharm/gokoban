@@ -1,6 +1,6 @@
 package entities
 
-type Point [2]int
+import "github.com/ericharm/gokoban/defs"
 
 type EntityType int
 
@@ -12,11 +12,19 @@ const (
 	EntityExit
 )
 
-type Direction []int
+type Direction defs.Vec2
 
 var (
-	Left  Direction = []int{-1, 0}
-	Right Direction = []int{1, 0}
-	Up    Direction = []int{0, -1}
-	Down  Direction = []int{0, 1}
+	Left  Direction = [2]int{-1, 0}
+	Right Direction = [2]int{1, 0}
+	Up    Direction = [2]int{0, -1}
+	Down  Direction = [2]int{0, 1}
 )
+
+func (d Direction) AsTuple() (int, int) {
+	return d[0], d[1]
+}
+
+func (d Direction) AsVec2() defs.Vec2 {
+	return defs.Vec2{d[0], d[1]}
+}

@@ -3,12 +3,13 @@ package entities
 import "strconv"
 import "strings"
 import "github.com/rthornton128/goncurses"
+import "github.com/ericharm/gokoban/defs"
 
 type Entity interface {
-	Print(*goncurses.Window, Point)
+	Print(*goncurses.Window, defs.Vec2)
 	Debug() string
-	PushInDirection(Direction, map[Point]Entity) bool
-	GetPos() (int, int)
+	PushInDirection(Direction, map[defs.Vec2]Entity) bool
+	GetPos() defs.Vec2
 	GetEntityType() EntityType
 }
 
@@ -20,7 +21,7 @@ type BaseEntity struct {
 	color      int16
 }
 
-func (entity *BaseEntity) Print(window *goncurses.Window, offset Point) {
+func (entity *BaseEntity) Print(window *goncurses.Window, offset defs.Vec2) {
 	window.MoveAddChar(
 		entity.y+offset[1],
 		entity.x+offset[0],
@@ -39,12 +40,12 @@ func (entity *BaseEntity) Debug() string {
 	return builder.String()
 }
 
-func (entity *BaseEntity) PushInDirection(direction Direction, entities map[Point]Entity) bool {
+func (entity *BaseEntity) PushInDirection(direction Direction, entities map[defs.Vec2]Entity) bool {
 	return false
 }
 
-func (entity *BaseEntity) GetPos() (int, int) {
-	return entity.x, entity.y
+func (entity *BaseEntity) GetPos() defs.Vec2 {
+	return defs.Vec2{entity.x, entity.y}
 }
 
 func (entity *BaseEntity) GetEntityType() EntityType {

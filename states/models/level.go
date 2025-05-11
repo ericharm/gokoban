@@ -1,6 +1,7 @@
 package states
 
 import (
+	"github.com/ericharm/gokoban/defs"
 	en "github.com/ericharm/gokoban/entities"
 	"github.com/ericharm/gokoban/util"
 	"github.com/rthornton128/goncurses"
@@ -12,7 +13,7 @@ import (
 type Level struct {
 	Completed bool
 	player    *en.Player
-	entities  map[en.Point]en.Entity
+	entities  map[defs.Vec2]en.Entity
 	width     int
 	height    int
 }
@@ -37,7 +38,7 @@ func (level *Level) HandleInput(char goncurses.Key) {
 func (level *Level) Draw(window *goncurses.Window) {
 	maxY, maxX := window.MaxYX()
 	offsetX, offsetY := util.GetOffset(maxX, maxY, level.width, level.height)
-	offset := en.Point{offsetX, offsetY}
+	offset := defs.Vec2{offsetX, offsetY}
 
 	for _, entity := range level.entities {
 		entity.Print(window, offset)
@@ -64,7 +65,7 @@ func NewLevelFromFile(filePath string) *Level {
 	}
 
 	player := en.NewPlayer(0, 0)
-	entities := make(map[en.Point]en.Entity)
+	entities := make(map[defs.Vec2]en.Entity)
 
 	width := 0
 	x := 0
@@ -83,11 +84,11 @@ func NewLevelFromFile(filePath string) *Level {
 
 		if p != nil {
 			player = p
-			entities[en.Point{x, y}] = p
+			entities[defs.Vec2{x, y}] = p
 		}
 
 		if entity != nil {
-			entities[en.Point{x, y}] = entity
+			entities[defs.Vec2{x, y}] = entity
 		}
 
 		x += 1

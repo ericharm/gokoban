@@ -20,8 +20,8 @@ func NewPlayer(x int, y int) *Player {
 	}
 }
 
-func (player *Player) PushInDirection(direction Direction, entities map[Point]Entity) bool {
-	target := Point{player.x + direction[0], player.y + direction[1]}
+func (player *Player) PushInDirection(direction Direction, entities map[defs.Vec2]Entity) bool {
+	target := defs.Vec2{player.x + direction[0], player.y + direction[1]}
 	other, exists := entities[target]
 
 	if exists {
@@ -31,9 +31,9 @@ func (player *Player) PushInDirection(direction Direction, entities map[Point]En
 		}
 	}
 
-	delete(entities, Point{player.x, player.y})
+	delete(entities, defs.Vec2{player.x, player.y})
 	player.move(direction[0], direction[1])
-	entities[Point{player.x, player.y}] = player
+	entities[defs.Vec2{player.x, player.y}] = player
 	return true
 }
 

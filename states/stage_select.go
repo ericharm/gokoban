@@ -16,10 +16,18 @@ func NewStageSelect() *StageSelect {
 	application := GetApplication()
 	window := application.GetWindow()
 	maxY, maxX := window.MaxYX()
-	centerX, centerY := util.GetOffset(maxX, maxY, 20, 10)
+
+	singleColumnWidth := len("Level 8") + models.SelectedOptionCursorGutter*2
+	columnCount := models.SelectLevelScreenColumnCount
+	optionsListWidth := singleColumnWidth * columnCount
+	optionsListHeight := len(stageSelectOptions) / columnCount * models.SelectLevelScreenYSpacing
+
+	centerX, centerY := util.GetOffset(maxX, maxY, optionsListWidth, optionsListHeight)
 
 	return &StageSelect{
-		options: models.NewOptionsList(stageSelectOptions, []int{-3, 8}, centerX, centerY+3),
+		options: models.NewOptionsList(
+			stageSelectOptions, []int{0, singleColumnWidth}, centerX, centerY,
+		),
 	}
 }
 
@@ -32,7 +40,7 @@ func (s *StageSelect) HandleInput(key goncurses.Key) {
 }
 
 var stageSelectOptions = []*models.Option{
-	models.NewOption("Level 1", func() { selectLevel("data/0.lvl") }),
+	models.NewOption("Level 1", func() { selectLevel("data/1.lvl") }),
 	models.NewOption("Level 2", func() { selectLevel("data/2.lvl") }),
 	models.NewOption("Level 3", func() { selectLevel("data/3.lvl") }),
 	models.NewOption("Level 4", func() { selectLevel("data/4.lvl") }),

@@ -47,7 +47,7 @@ func NewOptionsList(
 		columnIndex = (columnIndex + 1) % len(columnOffsets)
 		xOffset = columnOffsets[columnIndex] + startX
 		if columnIndex == 0 {
-			yOffset += YSpacing
+			yOffset += SelectLevelScreenYSpacing
 		}
 	}
 

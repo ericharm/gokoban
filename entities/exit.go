@@ -21,8 +21,8 @@ func NewExit(x int, y int) Entity {
 	}
 }
 
-func (exit *Exit) PushInDirection(direction Direction, entities map[Point]Entity) bool {
-	pushedFrom := Point{exit.x - direction[0], exit.y - direction[1]}
+func (exit *Exit) PushInDirection(direction Direction, entities map[defs.Vec2]Entity) bool {
+	pushedFrom := defs.Vec2{exit.x - direction[0], exit.y - direction[1]}
 	pusher, exists := entities[pushedFrom]
 
 	if exists {
